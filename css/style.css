@@ -1,0 +1,656 @@
+/* ===== Base ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --esp-red: #c60b1e;
+  --esp-yellow: #ffc400;
+  --arg-blue: #6cace4;
+  --arg-sun: #f6b40e;
+  --bg: #0d1b2a;
+  --bg-card: #16283d;
+  --text: #eef3f8;
+  --text-dim: #9db2c7;
+  --accent: #2ee66b;
+  --radius: 14px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+h1, h2, h3 { line-height: 1.2; }
+
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ===== Hero ===== */
+.hero {
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px 32px;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(198, 11, 30, .4), transparent 55%),
+    radial-gradient(ellipse at 80% 0%, rgba(108, 172, 228, .4), transparent 55%),
+    linear-gradient(rgba(13, 27, 42, .78), rgba(13, 27, 42, .92) 80%, var(--bg)),
+    url('../img/hero-bg.jpg') center 22% / cover no-repeat;
+}
+
+/* Banderas del hero */
+.hero-flags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.h1-flag {
+  width: clamp(90px, 16vw, 150px);
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .55);
+}
+
+.flag-wave { animation: wave 5s ease-in-out infinite; transform-origin: center; }
+.flag-wave.delay { animation-delay: 2.5s; }
+
+@keyframes wave {
+  0%, 100% { transform: perspective(400px) rotateY(-7deg) rotateZ(-1deg); }
+  50% { transform: perspective(400px) rotateY(7deg) rotateZ(1deg); }
+}
+
+.vs-badge {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--esp-red), var(--arg-blue));
+  border: 2px solid rgba(255, 255, 255, .5);
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .5);
+}
+
+.hero-tag {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: .8rem;
+  margin-bottom: 16px;
+}
+
+/* Tipografía protagonista: los dos nombres gigantes apilados */
+.hero h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .02em;
+  font-family: 'Archivo Black', system-ui, sans-serif;
+  font-size: clamp(2.6rem, 11vw, 6.5rem);
+  line-height: .98;
+  letter-spacing: .01em;
+}
+
+.team { display: block; }
+.team .ch { display: inline-block; }
+
+.team-esp,
+.team-esp .ch {
+  background: linear-gradient(100deg, var(--esp-yellow) 5%, #ff7a00 45%, var(--esp-red) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.team-esp { filter: drop-shadow(0 6px 22px rgba(198, 11, 30, .5)); }
+
+.team-arg,
+.team-arg .ch {
+  background: linear-gradient(100deg, #ffffff 5%, #a9d1f2 45%, var(--arg-blue) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.team-arg { filter: drop-shadow(0 6px 22px rgba(108, 172, 228, .5)); }
+
+.vs {
+  font-family: system-ui, sans-serif;
+  font-size: clamp(.9rem, 2.4vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: .6em;
+  text-indent: .6em;
+  color: var(--text-dim);
+}
+
+.hero-sub { margin: 16px auto 28px; max-width: 520px; color: var(--text-dim); }
+
+/* Píldora del premio: calmada — borde verde con resplandor suave y línea estática bicolor */
+.prize-pill {
+  position: relative;
+  margin: 26px auto 30px;
+  max-width: 620px;
+  padding: 15px 22px;
+  border-radius: 16px;
+  background: rgba(13, 27, 42, .88);
+  border: 1px solid rgba(46, 230, 107, .45);
+  box-shadow: 0 0 22px rgba(46, 230, 107, .12);
+  font-size: clamp(.92rem, 2.4vw, 1.15rem);
+  line-height: 1.55;
+  animation: prize-breathe 5s ease-in-out infinite;
+}
+
+.prize-pill strong { color: var(--accent); }
+
+/* Línea inferior estática con los colores de las dos selecciones */
+.prize-pill::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: -2px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--esp-red), var(--esp-yellow) 42%, #fff 50%, #9cc9ee 58%, var(--arg-blue));
+  opacity: .85;
+}
+
+@keyframes prize-breathe {
+  0%, 100% { box-shadow: 0 0 18px rgba(46, 230, 107, .1); border-color: rgba(46, 230, 107, .38); }
+  50% { box-shadow: 0 0 30px rgba(46, 230, 107, .22); border-color: rgba(46, 230, 107, .6); }
+}
+
+@keyframes shine {
+  0%, 15% { background-position: 130% 0; }
+  60%, 100% { background-position: -130% 0; }
+}
+
+/* Indicador de scroll */
+.scroll-hint {
+  margin-top: 28px;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--text-dim);
+  animation: hint-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes hint-bounce {
+  0%, 100% { transform: translateY(0); opacity: .55; }
+  50% { transform: translateY(10px); opacity: 1; }
+}
+
+/* Marquesina */
+.ticker {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--esp-red), #6d1226 30%, #14395a 70%, #2f6ea5);
+  border-block: 1px solid rgba(255, 255, 255, .18);
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 26s linear infinite;
+}
+
+.ticker-track span {
+  padding: 11px 0;
+  white-space: nowrap;
+  font-weight: 800;
+  font-size: .92rem;
+  letter-spacing: .1em;
+}
+
+@keyframes ticker-scroll { to { transform: translateX(-50%); } }
+
+/* ===== Countdown ===== */
+.countdown {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.cd-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  min-width: 74px;
+}
+
+.cd-box span {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.cd-box small { color: var(--text-dim); text-transform: uppercase; font-size: .7rem; letter-spacing: .08em; }
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-block;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, .35); }
+
+.btn-cta {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), #1db954);
+  color: #06280f;
+  border: none;
+  box-shadow: 0 8px 26px rgba(46, 230, 107, .35);
+}
+
+.btn-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .45) 50%, transparent 65%);
+  background-size: 250% 100%;
+  animation: shine 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hidden { display: none; }
+
+/* ===== Cards ===== */
+.card {
+  background: rgba(22, 40, 61, .66);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-top: 28px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .25);
+}
+
+.card h2 { margin-bottom: 10px; }
+.card > p { color: var(--text-dim); margin-bottom: 18px; }
+
+.card-highlight {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 32px rgba(46, 230, 107, .12);
+}
+
+/* ===== Ads ===== */
+.ad-slot { max-width: 860px; margin: 28px auto 0; padding: 0 16px; text-align: center; }
+.ad-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-dim); }
+
+.ad-placeholder {
+  border: 1px dashed rgba(255, 255, 255, .2);
+  border-radius: 8px;
+  color: var(--text-dim);
+  padding: 32px 16px;
+  font-size: .85rem;
+}
+
+/* ===== Predicción ===== */
+.predict-row { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 18px; }
+.predict-team { text-align: center; }
+.predict-team .flag { font-size: 2.4rem; display: block; }
+
+.predict-team .flag-img {
+  display: block;
+  width: 72px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .4);
+}
+.predict-team label { display: block; color: var(--text-dim); font-size: .85rem; margin: 4px 0; }
+.predict-dash { font-size: 2rem; color: var(--text-dim); }
+
+select {
+  font-size: 1.4rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, .2);
+}
+
+/* ===== Penaltis ===== */
+.goal {
+  position: relative;
+  height: 120px;
+  max-width: 420px;
+  margin: 0 auto 16px;
+  border: 4px solid #fff;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: repeating-linear-gradient(90deg, transparent 0 28px, rgba(255,255,255,.06) 28px 30px);
+}
+
+.keeper {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  transition: left .3s ease;
+}
+
+.keeper.pos-0 { left: 18%; }
+.keeper.pos-1 { left: 50%; }
+.keeper.pos-2 { left: 82%; }
+
+.shoot-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+
+.pk-ball {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 36px;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .5));
+}
+
+.confetti {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.scoreline { text-align: center; color: var(--text-dim); }
+.scoreline strong { color: var(--text); }
+
+/* ===== Trivia ===== */
+.quiz-question { font-size: 1.15rem; font-weight: 600; margin-bottom: 14px; }
+.quiz-options { display: grid; gap: 10px; margin-bottom: 14px; }
+
+.quiz-options button {
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .15);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover { border-color: var(--accent); }
+.quiz-options button.correct { background: rgba(46, 230, 107, .25); border-color: var(--accent); }
+.quiz-options button.wrong { background: rgba(230, 57, 70, .25); border-color: #e63946; }
+
+/* ===== Sorteo ===== */
+.steps { list-style: none; margin-bottom: 20px; display: grid; gap: 8px; }
+.steps em { color: var(--text-dim); font-style: normal; font-size: .85em; }
+
+.pot-note {
+  background: rgba(46, 230, 107, .08);
+  border: 1px solid rgba(46, 230, 107, .35);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  line-height: 1.55;
+}
+
+.pot-note strong { color: var(--accent); }
+
+#comment-form input,
+#comment-form textarea {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
+}
+
+.fineprint { font-size: .75rem; color: var(--text-dim); margin-top: 16px; }
+
+/* ===== Previa ===== */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0 24px; }
+.two-col p { color: var(--text-dim); }
+
+details { margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, .1); border-radius: 10px; padding: 10px 16px; }
+details summary { cursor: pointer; font-weight: 600; }
+details p { color: var(--text-dim); margin-top: 8px; }
+
+/* ===== Banner de ambiente y sede ===== */
+.mood-banner {
+  position: relative;
+  margin-top: 28px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.mood-banner img {
+  display: block;
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.mood-banner figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 40px 20px 16px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .75));
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-style: italic;
+  text-align: center;
+}
+
+.sede-figure {
+  margin: 12px 0 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+
+.sede-figure img { display: block; width: 100%; height: auto; }
+
+.sede-figure figcaption {
+  padding: 10px 14px;
+  font-size: .8rem;
+  color: var(--text-dim);
+  background: var(--bg);
+}
+
+.sede-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sede-stats .stat {
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.sede-stats strong { display: block; font-size: 1.2rem; }
+.sede-stats span { color: var(--text-dim); font-size: .8rem; }
+
+/* ===== Comentarios ===== */
+#comment-form { display: grid; gap: 12px; margin-bottom: 24px; }
+#comment-form textarea { min-height: 80px; resize: vertical; }
+
+.comment-list { list-style: none; display: grid; gap: 12px; }
+
+.comment-list li {
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.comment-list .c-name { font-weight: 700; color: var(--accent); }
+.comment-list .c-date { font-size: .75rem; color: var(--text-dim); margin-left: 8px; }
+.comment-list p { margin-top: 4px; }
+
+/* ===== Feedback ===== */
+.feedback { min-height: 1.4em; font-weight: 600; color: var(--accent); text-align: center; margin-top: 10px; }
+.feedback.err { color: #e63946; }
+
+/* ===== Footer ===== */
+footer {
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  margin-top: 48px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: .8rem;
+}
+
+footer p { max-width: 640px; margin: 0 auto 10px; }
+footer a { color: var(--accent); }
+
+.credits { font-size: .7rem; opacity: .75; }
+
+/* ============================================================
+   FONDO DINÁMICO: jugadores parallax + animaciones
+   ============================================================ */
+
+/* El contenido queda por encima del fondo */
+.hero, main, footer, .ad-slot, .scroll-progress { position: relative; z-index: 1; }
+
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 4px;
+  width: 0;
+  background: linear-gradient(90deg, var(--esp-red), var(--esp-yellow) 40%, #fff 50%, var(--arg-blue) 60%, var(--arg-sun));
+  z-index: 10;
+  transition: width .1s linear;
+}
+
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Resplandores de color animados */
+.bg-glow {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .22;
+}
+
+.bg-glow-esp {
+  background: radial-gradient(circle, var(--esp-red), transparent 65%);
+  top: -20vmax; left: -18vmax;
+  animation: drift-esp 16s ease-in-out infinite alternate;
+}
+
+.bg-glow-arg {
+  background: radial-gradient(circle, var(--arg-blue), transparent 65%);
+  bottom: -20vmax; right: -18vmax;
+  animation: drift-arg 19s ease-in-out infinite alternate;
+}
+
+@keyframes drift-esp { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
+@keyframes drift-arg { to { transform: translate(-14vmax, -10vmax) scale(1.2); } }
+
+/* Balones y copa flotando */
+.ball {
+  position: absolute;
+  font-size: 2rem;
+  opacity: .35;
+  animation: float-ball 11s ease-in-out infinite;
+}
+
+img.ball { width: 46px; height: 46px; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .5)); }
+img.b2 { width: 32px; height: 32px; }
+img.b3 { width: 26px; height: 26px; }
+
+.b1 { top: 22vh; left: 38vw; animation-duration: 9s; }
+.b2 { top: 68vh; left: 55vw; animation-duration: 13s; animation-delay: 2s; font-size: 1.4rem; }
+.b3 { top: 42vh; left: 8vw; animation-duration: 15s; animation-delay: 4s; font-size: 1.2rem; }
+.b4 { top: 12vh; left: 72vw; animation-duration: 12s; animation-delay: 1s; font-size: 2.6rem; opacity: .3; }
+
+@keyframes float-ball {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-30px) rotate(90deg); }
+  50% { transform: translateY(10px) rotate(180deg); }
+  75% { transform: translateY(-18px) rotate(270deg); }
+}
+
+/* Aparición de secciones al hacer scroll (fallback sin GSAP; la clase .reveal la añade JS) */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* En pantallas bajas (móvil apaisado o portátiles pequeños), sin flecha para que quepa el hero */
+@media (max-height: 700px) {
+  .scroll-hint { display: none; }
+  .hero { min-height: auto; padding-bottom: 40px; }
+}
+
+/* Accesibilidad: sin animaciones si el usuario las desactiva */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .two-col { grid-template-columns: 1fr; }
+  .cd-box { min-width: 64px; padding: 10px 10px; }
+  .card { padding: 20px; }
+  .hero { padding: 36px 14px 22px; }
+  .hero-tag { font-size: .68rem; margin-bottom: 12px; }
+  .hero-flags { gap: 14px; margin-bottom: 14px; }
+  .h1-flag { width: 70px; }
+  .vs-badge { width: 42px; height: 42px; font-size: .9rem; }
+  .prize-pill { margin: 18px auto 20px; padding: 12px 16px; }
+  .countdown { gap: 8px; }
+  .ticker-track span { font-size: .78rem; }
+  /* En móvil, menos elementos de fondo para no saturar */
+  .b3 { display: none; }
+}
