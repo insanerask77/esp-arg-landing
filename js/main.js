@@ -35,6 +35,54 @@ function tickCountdown() {
 }
 tickCountdown();
 
+/* ===== Bote estimado del sorteo =====
+   Estimación determinista basada en el tiempo transcurrido desde el lanzamiento,
+   de modo que todos los visitantes ven la misma cifra creciendo poco a poco.
+   Ajusta RATE_PER_HOUR a tus ingresos reales de Monetag para que sea realista,
+   y BASE si quieres partir de un importe ya acumulado. */
+const POT = {
+  LAUNCH: Date.parse('2026-07-16T00:00:00+02:00'), // fecha de lanzamiento de la web
+  BASE: 0,             // € acumulados antes del lanzamiento del contador
+  RATE_PER_HOUR: 0.32, // € que crece el bote cada hora (media estimada de ingresos)
+  CLICK_BONUS: 0.01,   // € extra estimado por cada clic en el enlace patrocinado
+};
+
+const potEls = document.querySelectorAll('.js-pot-amount');
+const potFmt = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+
+function potValue() {
+  const hours = Math.max(0, (Date.now() - POT.LAUNCH) / 3.6e6);
+  return POT.BASE + hours * POT.RATE_PER_HOUR + store.get('potClicks', 0) * POT.CLICK_BONUS;
+}
+
+function renderPot(value = potValue()) {
+  const text = `${potFmt.format(value)} €`;
+  potEls.forEach((el) => {
+    if (el.textContent === text) return;
+    el.textContent = text;
+    el.classList.add('tick');
+    setTimeout(() => el.classList.remove('tick'), 200);
+  });
+}
+
+if (potEls.length) {
+  const startPotTicker = () => setInterval(() => renderPot(), 1000);
+  if (motionOK()) {
+    // Al cargar, la cifra sube desde 0 hasta el valor actual
+    const obj = { v: 0 };
+    gsap.to(obj, {
+      v: potValue(),
+      duration: 1.8,
+      ease: 'power2.out',
+      onUpdate: () => renderPot(obj.v),
+      onComplete: () => { renderPot(); startPotTicker(); },
+    });
+  } else {
+    renderPot();
+    startPotTicker();
+  }
+}
+
 /* ===== Predicción de marcador ===== */
 const savedPrediction = store.get('prediction', null);
 if (savedPrediction) {
@@ -289,6 +337,7 @@ if (motionOK() && typeof window.ScrollTrigger !== 'undefined') {
       stagger: .05, duration: .6, ease: 'back.out(1.6)',
     }, '-=.25')
     .from('.prize-pill', { scale: .7, autoAlpha: 0, duration: .55, ease: 'back.out(2)' }, '-=.15')
+    .from('.pot-counter', { y: 24, autoAlpha: 0, duration: .5, ease: 'back.out(2)' }, '-=.2')
     .from('.cd-box', { y: 30, autoAlpha: 0, scale: .8, stagger: .08, duration: .45, ease: 'back.out(2)' }, '-=.2')
     .from('.hero .btn-cta', { scale: .6, autoAlpha: 0, duration: .45, ease: 'back.out(2)' }, '-=.1')
     .from('.scroll-hint', { autoAlpha: 0, duration: .4 }, '-=.1');
@@ -402,6 +451,11 @@ document.querySelectorAll('.btn-cta').forEach((btn) => {
   btn.addEventListener('click', () => {
     if (sessionStorage.getItem('adLinkShown')) return;
     const win = window.open(AD_LINK, '_blank', 'noopener');
-    if (win) sessionStorage.setItem('adLinkShown', '1');
+    if (win) {
+      sessionStorage.setItem('adLinkShown', '1');
+      // El clic patrocinado suma su aportación estimada al bote
+      store.set('potClicks', store.get('potClicks', 0) + 1);
+      renderPot();
+    }
   });
 });

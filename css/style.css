@@ -173,6 +173,55 @@ main {
   50% { box-shadow: 0 0 30px rgba(46, 230, 107, .22); border-color: rgba(46, 230, 107, .6); }
 }
 
+/* ===== Bote estimado ===== */
+.pot-counter {
+  margin: 0 auto 26px;
+  max-width: 400px;
+  padding: 14px 24px 12px;
+  border-radius: 16px;
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 230, 107, .4);
+  box-shadow: 0 0 24px rgba(46, 230, 107, .12);
+}
+
+.pot-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pot-counter .pot-amount {
+  display: block;
+  font-size: clamp(1.7rem, 5vw, 2.3rem);
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 18px rgba(46, 230, 107, .35);
+  transition: transform .18s ease;
+}
+
+.pot-counter .pot-amount.tick { transform: scale(1.05); }
+
+.pot-fineprint {
+  display: block;
+  margin-top: 6px;
+  font-size: .68rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.pot-note-live {
+  display: block;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(46, 230, 107, .35);
+  font-variant-numeric: tabular-nums;
+}
+
 @keyframes shine {
   0%, 15% { background-position: 130% 0; }
   60%, 100% { background-position: -130% 0; }
