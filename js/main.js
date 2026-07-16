@@ -48,7 +48,7 @@ const POT = {
 };
 
 const potEls = document.querySelectorAll('.js-pot-amount');
-const potFmt = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const potFmt = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
 function potValue() {
   const hours = Math.max(0, (Date.now() - POT.LAUNCH) / 3.6e6);
