@@ -394,3 +394,14 @@ $('#comment-form').addEventListener('submit', (e) => {
     gsap.from('#comment-list li:first-child', { autoAlpha: 0, y: -16, duration: .4, ease: 'power2.out' });
   }
 });
+
+/* ===== Monetag: direct link al pulsar "participar" ===== */
+const AD_LINK = 'https://omg10.com/4/11317931';
+
+document.querySelectorAll('.btn-cta').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (sessionStorage.getItem('adLinkShown')) return;
+    const win = window.open(AD_LINK, '_blank', 'noopener');
+    if (win) sessionStorage.setItem('adLinkShown', '1');
+  });
+});
