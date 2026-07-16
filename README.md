@@ -14,7 +14,7 @@ Landing page para la gran final de la Copa Mundial 2026 entre **España** y **Ar
 
 ## Tecnología
 
-HTML + CSS + JavaScript puro, **sin frameworks ni build**, con **GSAP + ScrollTrigger** (vía CDN, con carga diferida y fallback sin CDN) para las animaciones. Es la opción óptima para indexación rápida en Google:
+Frontend en HTML + CSS + JavaScript puro, **sin frameworks ni build**, con **GSAP + ScrollTrigger** (vía CDN, con carga diferida y fallback sin CDN) para las animaciones. Es la opción óptima para indexación rápida en Google:
 
 - Todo el contenido está en el HTML (Googlebot no necesita ejecutar JS para leerlo)
 - Carga casi instantánea (Core Web Vitals excelentes)
@@ -22,9 +22,11 @@ HTML + CSS + JavaScript puro, **sin frameworks ni build**, con **GSAP + ScrollTr
 - Open Graph y Twitter Cards para que se comparta bien en redes
 - `sitemap.xml` y `robots.txt` incluidos
 
+Los **comentarios** y las **predicciones de marcador** (con el % de la afición que vota a cada equipo) ya no se guardan solo en el navegador: se comparten entre todos los visitantes mediante un backend en `server/app.py`, escrito solo con librería estándar de Python (`http.server` + `sqlite3`, sin `pip install`). El resto (racha de penaltis, mejor marca de trivia, bote estimado) sigue en `localStorage`, sin servidor.
+
 ## Puesta en marcha
 
-1. **Publicar**: activa GitHub Pages (Settings → Pages → rama `main`) o sube los archivos a cualquier hosting estático (Netlify, Vercel, Cloudflare Pages).
+1. **Backend**: ejecuta `python3 server/app.py` en tu servidor (VPS, Railway, Render, etc.) — necesitas un proceso corriendo de forma persistente, **no funciona en hosting 100% estático** como GitHub Pages. El propio backend sirve también el HTML/CSS/JS, así que solo necesitas exponer ese proceso (puerto `8000` por defecto, configurable con la variable de entorno `PORT`) detrás de tu dominio (p. ej. con Nginx como proxy inverso).
 2. **Dominio**: reemplaza `TU-DOMINIO.com` en `index.html`, `robots.txt` y `sitemap.xml` por tu URL real. Un dominio propio ayuda al SEO.
 3. **Indexación rápida (Google Search Console)**:
    - Da de alta el sitio en [Google Search Console](https://search.google.com/search-console) (método "Etiqueta HTML")

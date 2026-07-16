@@ -2,7 +2,7 @@
 # Descomenta y completa la línea de la red que uses:
 #
 # Google AdSense (reemplaza pub-XXXXXXXXXXXXXXXX por tu ID de editor):
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-6500738035122705, DIRECT, f08c47fec0942fa0
 #
 # Monetag te dará sus líneas exactas en el panel (Sites → ads.txt):
 # propellerads.com, XXXXXXX, DIRECT, ...

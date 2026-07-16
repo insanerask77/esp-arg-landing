@@ -361,30 +361,31 @@ main {
   font-size: .85rem;
 }
 
-/* ===== Predicción ===== */
-.predict-row { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 18px; }
-.predict-team { text-align: center; }
-.predict-team .flag { font-size: 2.4rem; display: block; }
+/* ===== Voto: ¿quién gana? ===== */
+.vote-row { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
 
-.predict-team .flag-img {
+.vote-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 110px;
+}
+
+.vote-btn .flag-img {
   display: block;
-  width: 72px;
+  width: 56px;
   height: auto;
-  margin: 0 auto;
   border-radius: 6px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, .4);
 }
-.predict-team label { display: block; color: var(--text-dim); font-size: .85rem; margin: 4px 0; }
-.predict-dash { font-size: 2rem; color: var(--text-dim); }
 
-select {
-  font-size: 1.4rem;
-  padding: 6px 14px;
-  border-radius: 8px;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, .2);
+.vote-btn.picked {
+  border-color: #2ee66b;
+  box-shadow: 0 0 0 2px rgba(46, 230, 107, .5);
 }
+
+.predict-stats { text-align: center; color: var(--text-dim); font-size: .9rem; margin-top: 10px; }
 
 /* ===== Penaltis ===== */
 .goal {

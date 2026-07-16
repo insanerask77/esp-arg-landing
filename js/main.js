@@ -1,6 +1,7 @@
 /* España vs Argentina — Final Mundial 2026
    Lógica de: cuenta regresiva, predicción, penaltis, trivia, sorteo y comentarios.
-   Persistencia local con localStorage (sin backend). */
+   Comentarios y predicciones se guardan en el backend (API + SQLite);
+   el resto (penaltis, trivia, bote) sigue en localStorage, sin servidor. */
 
 'use strict';
 
@@ -16,6 +17,35 @@ const store = {
   },
   set(key, value) { localStorage.setItem(key, JSON.stringify(value)); },
 };
+
+// Identificador anónimo del visitante (solo para que el backend sepa qué
+// predicción es "la suya" y pueda actualizarla en vez de duplicarla).
+function getClientId() {
+  let id = localStorage.getItem('clientId');
+  if (!id) {
+    id = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`)
+      .replace(/[^A-Za-z0-9_-]/g, '');
+    localStorage.setItem('clientId', id);
+  }
+  return id;
+}
+
+async function apiGet(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`GET ${path} → ${res.status}`);
+  return res.json();
+}
+
+async function apiPost(path, body) {
+  const res = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error((data && data.error) || `POST ${path} → ${res.status}`);
+  return data;
+}
 
 /* ===== Cuenta regresiva ===== */
 const FINAL_DATE = new Date('2026-07-19T15:00:00-04:00');
@@ -83,21 +113,55 @@ if (potEls.length) {
   }
 }
 
-/* ===== Predicción de marcador ===== */
-const savedPrediction = store.get('prediction', null);
-if (savedPrediction) {
-  $('#score-esp').value = savedPrediction.esp;
-  $('#score-arg').value = savedPrediction.arg;
-  $('#predict-feedback').textContent =
-    `Tu predicción guardada: España ${savedPrediction.esp} – ${savedPrediction.arg} Argentina`;
+/* ===== Voto: ¿quién gana? =====
+   Se guarda en el backend (SQLite) para calcular el % de la afición
+   que vota a cada equipo (o empate) entre todos los visitantes. */
+const clientId = getClientId();
+const PICK_LABELS = { esp: 'España', arg: 'Argentina', tie: 'un empate' };
+
+function markPicked(pick) {
+  document.querySelectorAll('.vote-btn').forEach((btn) => {
+    btn.classList.toggle('picked', btn.dataset.pick === pick);
+  });
 }
 
-$('#btn-predict').addEventListener('click', () => {
-  const esp = $('#score-esp').value;
-  const arg = $('#score-arg').value;
-  store.set('prediction', { esp, arg, at: Date.now() });
-  $('#predict-feedback').textContent =
-    `✅ Predicción guardada: España ${esp} – ${arg} Argentina. ¡Suerte en el sorteo!`;
+function renderPredictStats(stats) {
+  const el = $('#predict-stats');
+  if (!el || !stats || !stats.total) {
+    if (el) el.textContent = '';
+    return;
+  }
+  el.textContent =
+    `🗳️ Voto de la afición (${stats.total} votos): ` +
+    `🇪🇸 España ${stats.espPct}% · 🤝 Empate ${stats.tiePct}% · 🇦🇷 Argentina ${stats.argPct}%`;
+}
+
+(async () => {
+  try {
+    const { mine, stats } = await apiGet(`/api/vote?clientId=${encodeURIComponent(clientId)}`);
+    if (mine) {
+      markPicked(mine);
+      $('#predict-feedback').textContent = `Tu voto guardado: ganará ${PICK_LABELS[mine]}`;
+    }
+    renderPredictStats(stats);
+  } catch {
+    // Backend no disponible: se puede seguir viendo la página, solo sin votar ni ver el %.
+  }
+})();
+
+document.querySelectorAll('.vote-btn').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const pick = btn.dataset.pick;
+    try {
+      const { stats } = await apiPost('/api/vote', { clientId, pick });
+      markPicked(pick);
+      $('#predict-feedback').textContent = `✅ Voto guardado: ganará ${PICK_LABELS[pick]}. ¡Suerte en el sorteo!`;
+      renderPredictStats(stats);
+    } catch {
+      $('#predict-feedback').textContent =
+        '⚠️ No se pudo guardar el voto. Comprueba que el servidor (python3 server/app.py) esté corriendo.';
+    }
+  });
 });
 
 /* ===== Minijuego de penaltis ===== */
@@ -272,15 +336,14 @@ $('#quiz-restart').addEventListener('click', () => {
 
 renderQuestion();
 
-/* ===== Comentarios (localStorage) ===== */
+/* ===== Comentarios (backend + SQLite) ===== */
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 }
 
-function renderComments() {
-  const comments = store.get('comments', []);
+function paintComments(comments) {
   $('#comment-list').innerHTML = comments
     .map((c) => `
       <li>
@@ -290,7 +353,15 @@ function renderComments() {
       </li>`)
     .join('');
 }
-renderComments();
+
+async function loadComments() {
+  try {
+    paintComments(await apiGet('/api/comments'));
+  } catch {
+    // Backend no disponible: se deja la lista vacía sin romper el resto de la página.
+  }
+}
+loadComments();
 
 /* ===== Barra de progreso de scroll ===== */
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -428,34 +499,21 @@ if (motionOK() && typeof window.ScrollTrigger !== 'undefined') {
   });
 }
 
-$('#comment-form').addEventListener('submit', (e) => {
+$('#comment-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const comments = store.get('comments', []);
-  comments.unshift({
-    name: $('#comment-name').value.trim(),
-    text: $('#comment-text').value.trim(),
-    at: Date.now(),
-  });
-  store.set('comments', comments.slice(0, 50));
-  $('#comment-form').reset();
-  renderComments();
-  if (motionOK()) {
-    gsap.from('#comment-list li:first-child', { autoAlpha: 0, y: -16, duration: .4, ease: 'power2.out' });
-  }
-});
-
-/* ===== Monetag: direct link al pulsar "participar" ===== */
-const AD_LINK = 'https://omg10.com/4/11317931';
-
-document.querySelectorAll('.btn-cta').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    if (sessionStorage.getItem('adLinkShown')) return;
-    const win = window.open(AD_LINK, '_blank', 'noopener');
-    if (win) {
-      sessionStorage.setItem('adLinkShown', '1');
-      // El clic patrocinado suma su aportación estimada al bote
-      store.set('potClicks', store.get('potClicks', 0) + 1);
-      renderPot();
+  const name = $('#comment-name').value.trim();
+  const text = $('#comment-text').value.trim();
+  try {
+    await apiPost('/api/comments', { name, text });
+    $('#comment-form').reset();
+    $('#comment-feedback').textContent = '';
+    await loadComments();
+    if (motionOK()) {
+      gsap.from('#comment-list li:first-child', { autoAlpha: 0, y: -16, duration: .4, ease: 'power2.out' });
     }
-  });
+  } catch (err) {
+    $('#comment-feedback').textContent = err instanceof TypeError
+      ? '⚠️ No se pudo publicar el comentario. Inténtalo de nuevo.'
+      : `⚠️ ${err.message}`;
+  }
 });

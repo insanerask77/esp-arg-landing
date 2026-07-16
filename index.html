@@ -6,8 +6,8 @@
 
   <!-- ===== SEO ===== -->
   <title>España vs Argentina — Final Mundial 2026 | Predicciones, Juegos y Sorteo</title>
-  <meta name="description" content="La gran final del Mundial 2026: España vs Argentina. Participa GRATIS y gana: sorteamos los ingresos de la publicidad entre los participantes. Predice el marcador, juega a los penaltis y vive la previa del partido.">
-  <meta name="keywords" content="España vs Argentina, final mundial 2026, predicción marcador, sorteo mundial, penaltis online, trivia fútbol, copa mundial 2026">
+  <meta name="description" content="La gran final del Mundial 2026: España vs Argentina. Participa GRATIS y gana: sorteamos los ingresos de la publicidad entre los participantes. Vota quién gana, juega a los penaltis y vive la previa del partido.">
+  <meta name="keywords" content="España vs Argentina, final mundial 2026, quién gana el mundial, sorteo mundial, penaltis online, trivia fútbol, copa mundial 2026">
   <link rel="canonical" href="https://esp-arg.madolell.com/">
   <meta name="robots" content="index, follow, max-image-preview:large">
 
@@ -19,7 +19,7 @@
   <meta property="og:url" content="https://esp-arg.madolell.com/">
   <meta property="og:site_name" content="España vs Argentina — Final Mundial 2026">
   <meta property="og:image" content="https://esp-arg.madolell.com/img/hero-bg.jpg">
-
+  <meta name="google-adsense-account" content="ca-pub-6500738035122705">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="España vs Argentina — Final Mundial 2026 🏆">
@@ -130,7 +130,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="icon" type="image/png" href="img/ball.png">
 </head>
 <body>
@@ -209,29 +209,23 @@
 
 <main>
 
-  <!-- ===== PREDICCIÓN DE MARCADOR ===== -->
+  <!-- ===== VOTO: ¿QUIÉN GANA? ===== -->
   <section id="prediccion" class="card">
-    <h2>🔮 Predice el marcador</h2>
-    <p>Elige tu resultado y preséntalo en los comentarios de Instagram. ¿Quién acertará el marcador exacto? Gratis, sin apuestas de dinero.</p>
-    <div class="predict-row">
-      <div class="predict-team">
-        <img class="flag-img" src="img/flag-esp.png" alt="España" width="960" height="640">
-        <label for="score-esp">España</label>
-        <select id="score-esp">
-          <option>0</option><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option>
-        </select>
-      </div>
-      <span class="predict-dash">–</span>
-      <div class="predict-team">
-        <img class="flag-img" src="img/flag-arg.png" alt="Argentina" width="960" height="600">
-        <label for="score-arg">Argentina</label>
-        <select id="score-arg">
-          <option>0</option><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-        </select>
-      </div>
+    <h2>🔮 ¿Quién va a ganar?</h2>
+    <p>Vota y comparte tu pronóstico en los comentarios de Instagram. Gratis, sin apuestas de dinero.</p>
+    <div class="vote-row">
+      <button class="btn vote-btn" data-pick="esp">
+        <img class="flag-img" src="img/flag-esp.png" alt="" width="960" height="640">
+        España
+      </button>
+      <button class="btn vote-btn" data-pick="tie">🤝 Empate</button>
+      <button class="btn vote-btn" data-pick="arg">
+        <img class="flag-img" src="img/flag-arg.png" alt="" width="960" height="600">
+        Argentina
+      </button>
     </div>
-    <button class="btn" id="btn-predict">Guardar mi predicción</button>
     <p class="feedback" id="predict-feedback"></p>
+    <p class="predict-stats" id="predict-stats"></p>
   </section>
 
   <!-- ===== MINIJUEGO: PENALTIS ===== -->
@@ -359,6 +353,7 @@
       <textarea id="comment-text" placeholder="¿España o Argentina? ¿Por qué?" maxlength="280" required></textarea>
       <button class="btn" type="submit">Publicar comentario</button>
     </form>
+    <p class="feedback" id="comment-feedback"></p>
     <ul class="comment-list" id="comment-list"></ul>
   </section>
 
@@ -390,6 +385,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="js/main.js?v=3" defer></script>
+<script src="js/main.js?v=5" defer></script>
 </body>
 </html>
