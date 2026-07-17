@@ -73,7 +73,7 @@
       {
         "@type": "Question",
         "name": "¿Cómo participo en el sorteo entre aficionados?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Todo se hace en Instagram: dale me gusta a la publicación del sorteo y comenta etiquetando a 2 amigos. Tu comentario es tu participación. Seguir la cuenta es opcional. Es gratuito: no hay que pagar nada para participar." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Visita la web, inscribe tu usuario de Instagram, ve a la última publicación de la cuenta y dale me gusta, y comenta etiquetando a 2 amigos. Seguir la cuenta es opcional. Es gratuito: no hay que pagar nada para participar." }
       },
       {
         "@type": "Question",
@@ -114,23 +114,20 @@
   <!-- Monetag: verificación del sitio -->
   <meta name="monetag" content="ff759b470ef0929ebb2d1ff27a490331">
 
-  <!-- Monetag: zona de anuncios -->
-  <script src="https://quge5.com/88/tag.min.js" data-zone="260175" async data-cfasync="false"></script>
-
   <!-- Monetag: zona 11318079 (usa sw3.js en el root) -->
   <script src="https://5gvci.com/act/files/tag.min.js?z=11318079" data-cfasync="false" async></script>
 
-  <!-- Monetag: vignette, zona 11318128 -->
-  <script>(function(s){s.dataset.zone='11318128',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
   <!-- Monetag: zona 11318147 -->
   <script>(function(s){s.dataset.zone='11318147',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+  <!-- Quitadas por ser demasiado agresivas (bloqueaban la interacción con la página):
+       zona 260175 (multitag, quge5.com) y zona 11318128 (vignette, pantalla completa). -->
 
   <link rel="preload" as="image" href="img/hero-bg.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=6">
   <link rel="icon" type="image/png" href="img/ball.png">
 </head>
 <body>
@@ -218,7 +215,6 @@
         <img class="flag-img" src="img/flag-esp.png" alt="" width="960" height="640">
         España
       </button>
-      <button class="btn vote-btn" data-pick="tie">🤝 Empate</button>
       <button class="btn vote-btn" data-pick="arg">
         <img class="flag-img" src="img/flag-arg.png" alt="" width="960" height="600">
         Argentina
@@ -284,25 +280,36 @@
       Esta web se financia con publicidad. <strong>Los ingresos publicitarios (descontados los costes del sitio)
       se sortean entre los participantes válidos.</strong> Participar es totalmente gratuito.
     </p>
-    <p><strong>Cómo participar (todo se hace en Instagram):</strong></p>
+    <p><strong>Cómo participar:</strong></p>
     <ul class="steps">
-      <li>➕ <strong>Sígueme</strong> en Instagram <em>(opcional)</em></li>
-      <li>1️⃣ Dale ❤️ <strong>Me gusta</strong> a la publicación del sorteo</li>
-      <li>2️⃣ <strong>Comenta</strong> la publicación y <strong>etiqueta a 2 amigos</strong></li>
+      <li>1️⃣ Visita esta web</li>
+      <li>2️⃣ <strong>Inscribe tu Instagram</strong> aquí abajo</li>
+      <li>3️⃣ Ve a mi última publicación en Instagram y dale ❤️ <strong>Me gusta</strong></li>
+      <li>4️⃣ <strong>Etiqueta a 2 amigos</strong> en un comentario de esa publicación</li>
     </ul>
-    <p>Con eso ya estás dentro: tu comentario en la publicación es tu participación. 🎟️</p>
+    <p>¡Ya estás dentro! 🎟️</p>
+    <form id="insta-form" class="insta-form">
+      <label for="insta-username">Tu usuario de Instagram</label>
+      <div class="insta-form-row">
+        <input type="text" id="insta-username" placeholder="@tu_usuario" maxlength="31" required>
+        <button class="btn" type="submit">Registrarme</button>
+      </div>
+    </form>
+    <p class="feedback" id="insta-feedback"></p>
+    <p class="predict-stats" id="participant-count"></p>
     <div class="pot-note">
       💰 <strong>El bote crece contigo:</strong> cada visita a esta web genera ingresos por publicidad.
       Cuanta más gente entre y participe, <strong>más dinero se repartirá al ganador</strong>.
       ¡Comparte la web con quien quieras!
       <span class="pot-note-live">Bote estimado ahora mismo: <strong class="js-pot-amount">—</strong>*</span>
     </div>
-    <a class="btn btn-cta" href="https://www.instagram.com/p/TU_PUBLICACION/" target="_blank" rel="noopener" id="insta-post-link">
-      📸 Ir a la publicación y participar
+    <a class="btn btn-cta" href="https://www.instagram.com/madolellr/" target="_blank" rel="noopener" id="insta-post-link">
+      📸 Ir a mi Instagram y participar
     </a>
     <p class="fineprint">
       Sorteo gratuito y sin obligación de compra. Se comprobará que cada participante cumple los requisitos
-      (me gusta + comentario etiquetando a 2 amigos); los comentarios que no los cumplan no entrarán en el sorteo.
+      (registro del usuario de Instagram en esta web + me gusta + comentario etiquetando a 2 amigos en la
+      última publicación); quien no los cumpla no entrará en el sorteo.
       Seguir la cuenta es opcional y no da ventaja en el sorteo.
       Este sorteo no está patrocinado, avalado ni administrado por Instagram, ni asociado a Instagram/Meta.
       Página de aficionados, sin relación con FIFA ni con las federaciones.
@@ -341,7 +348,7 @@
 
     <h3>❓ Preguntas frecuentes</h3>
     <details><summary>¿A qué hora es la final?</summary><p>El 19 de julio de 2026. Consulta el horario en tu país: 21:00 en España peninsular, 16:00 en Argentina (horarios estimados).</p></details>
-    <details><summary>¿Cómo participo en el sorteo?</summary><p>Todo se hace en Instagram: dale me gusta a la publicación del sorteo y comenta etiquetando a 2 amigos (seguir la cuenta es opcional). Tu comentario es tu participación. Cuanta más gente visite la web, mayor será el bote del ganador.</p></details>
+    <details><summary>¿Cómo participo en el sorteo?</summary><p>Visita la web, inscribe tu usuario de Instagram, ve a mi última publicación y dale me gusta, y comenta etiquetando a 2 amigos (seguir la cuenta es opcional). Cuanta más gente visite la web, mayor será el bote del ganador.</p></details>
     <details><summary>¿Esto es una casa de apuestas?</summary><p>No. Las predicciones son un juego gratuito sin ánimo de lucro. Nadie apuesta ni gana dinero por predecir.</p></details>
   </section>
 
@@ -385,6 +392,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="js/main.js?v=5" defer></script>
+<script src="js/main.js?v=8" defer></script>
 </body>
 </html>

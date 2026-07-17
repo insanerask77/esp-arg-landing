@@ -115,9 +115,9 @@ if (potEls.length) {
 
 /* ===== Voto: ¿quién gana? =====
    Se guarda en el backend (SQLite) para calcular el % de la afición
-   que vota a cada equipo (o empate) entre todos los visitantes. */
+   que vota a cada equipo entre todos los visitantes. */
 const clientId = getClientId();
-const PICK_LABELS = { esp: 'España', arg: 'Argentina', tie: 'un empate' };
+const PICK_LABELS = { esp: 'España', arg: 'Argentina' };
 
 function markPicked(pick) {
   document.querySelectorAll('.vote-btn').forEach((btn) => {
@@ -133,7 +133,7 @@ function renderPredictStats(stats) {
   }
   el.textContent =
     `🗳️ Voto de la afición (${stats.total} votos): ` +
-    `🇪🇸 España ${stats.espPct}% · 🤝 Empate ${stats.tiePct}% · 🇦🇷 Argentina ${stats.argPct}%`;
+    `🇪🇸 España ${stats.espPct}% · 🇦🇷 Argentina ${stats.argPct}%`;
 }
 
 (async () => {
@@ -335,6 +335,45 @@ $('#quiz-restart').addEventListener('click', () => {
 });
 
 renderQuestion();
+
+/* ===== Registro de Instagram para el sorteo (backend + SQLite) =====
+   Guarda el usuario de Instagram de cada visitante (por clientId) para
+   poder cruzarlo con quien haya comentado de verdad en la publicación. */
+function renderParticipantCount(total) {
+  const el = $('#participant-count');
+  if (!el) return;
+  el.textContent = total
+    ? `🙋 ${total} ${total === 1 ? 'participante inscrito' : 'participantes inscritos'}`
+    : '';
+}
+
+(async () => {
+  try {
+    const { instagram, total } = await apiGet(`/api/participant?clientId=${encodeURIComponent(clientId)}`);
+    if (instagram) {
+      $('#insta-username').value = `@${instagram}`;
+      $('#insta-feedback').textContent = `Registrado como @${instagram}`;
+    }
+    renderParticipantCount(total);
+  } catch {
+    // Backend no disponible: se puede seguir viendo la página, solo sin registrar el Instagram.
+  }
+})();
+
+$('#insta-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const instagram = $('#insta-username').value;
+  try {
+    const { instagram: saved, total } = await apiPost('/api/participant', { clientId, instagram });
+    $('#insta-username').value = `@${saved}`;
+    $('#insta-feedback').textContent = `✅ Registrado como @${saved}. ¡Suerte en el sorteo!`;
+    renderParticipantCount(total);
+  } catch (err) {
+    $('#insta-feedback').textContent = err instanceof TypeError
+      ? '⚠️ No se pudo registrar tu Instagram. Inténtalo de nuevo.'
+      : `⚠️ ${err.message}`;
+  }
+});
 
 /* ===== Comentarios (backend + SQLite) ===== */
 function escapeHtml(str) {

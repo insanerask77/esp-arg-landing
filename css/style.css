@@ -474,7 +474,8 @@ main {
 .pot-note strong { color: var(--accent); }
 
 #comment-form input,
-#comment-form textarea {
+#comment-form textarea,
+.insta-form input {
   padding: 12px 16px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, .2);
@@ -484,6 +485,11 @@ main {
   font-family: inherit;
   width: 100%;
 }
+
+.insta-form { margin-bottom: 6px; }
+.insta-form label { display: block; color: var(--text-dim); font-size: .85rem; margin-bottom: 6px; }
+.insta-form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.insta-form-row input { flex: 1; min-width: 180px; }
 
 .fineprint { font-size: .75rem; color: var(--text-dim); margin-top: 16px; }
 

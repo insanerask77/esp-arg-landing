@@ -29,7 +29,7 @@ only Python's standard library (`http.server`, `sqlite3`), so nothing needs to b
 The SQLite file is created at `server/data.db` on first run (gitignored). Delete it to reset all
 comments/votes.
 
-Cache-busting: `index.html` references `css/style.css?v=5` and `js/main.js?v=5`. When editing either
+Cache-busting: `index.html` references `css/style.css?v=6` and `js/main.js?v=6`. When editing either
 file, bump the `?v=` query param on its `<link>`/`<script>` tag in `index.html` so browsers/CDNs pick
 up the change.
 
@@ -69,24 +69,41 @@ up the change.
   `.btn-cta` buttons are now plain links/anchors again.)
   The displayed value is always formatted to at most 2 decimals with no filler zeros (`Intl.NumberFormat`
   with `maximumFractionDigits: 2`).
-- **Score prediction / fan-vote percentage**: `POST /api/predictions {clientId, esp, arg}` upserts a
-  row per `clientId` (one vote per browser, not per submission) into `server/data.db`, then returns
-  the recalculated split — `esp > arg` counts as a España win-vote, `arg > esp` as an Argentina
-  win-vote, `esp === arg` as a tie — as `espPct`/`argPct`/`tiePct` out of `total`. `GET
-  /api/predictions?clientId=...` returns the same `stats` plus `mine` (that client's saved
-  prediction, if any) so the form can restore state and the "voto de la afición" line
-  (`#predict-stats`) can render on load without needing to submit first.
+- **"¿Quién gana?" vote / fan-vote percentage**: `POST /api/vote {clientId, pick}` (`pick` is `'esp'`
+  or `'arg'` — no draw option, deliberately removed) upserts a row per `clientId` (one vote per
+  browser, not per submission) into `server/data.db`, then returns the recalculated split as
+  `espPct`/`argPct` out of `total`. `GET /api/vote?clientId=...` returns the same `stats` plus `mine`
+  (that client's saved pick, if any) so the buttons can show which one is `.picked` and the "voto de
+  la afición" line (`#predict-stats`) can render on load without needing to vote first.
+- **Comment profanity filter** (`server/profanity.py`): `contains_profanity()` normalizes text
+  (lowercase, strips accents) and matches a blocklist of ES/EN words by whole word (not substring, so
+  "computador" doesn't trip on "puto"). `POST /api/comments` rejects with 400 if the name or the text
+  matches; it's a basic word list, not exhaustive moderation.
+- **Instagram participant registration** (`server/data.db`, table `participants`): `POST
+  /api/participant {clientId, instagram}` upserts the visitor's self-reported Instagram handle
+  (`@`-stripped, lowercased), one handle per `clientId` and one `clientId` per handle — a second
+  browser trying to claim an already-registered handle gets a 409 with an error the frontend surfaces
+  in `#insta-feedback`. This exists so the giveaway owner can manually cross-check "who registered on
+  the site" against "who actually liked/commented on the Instagram post" — the site has no way to
+  verify Instagram identity on its own, this is a best-effort self-reported link, not cryptographic
+  proof. Both `GET` and `POST` on `/api/participant` return a `total` (via `count_participants()`),
+  rendered as "`N` participantes inscritos" in `#participant-count`.
 - **Instagram giveaway**: entry happens entirely off-site on Instagram (like + comment tagging 2
-  friends); the site only explains rules and links out via `#insta-post-link`. This is *not* a paid
-  betting product — predictions/games are explicitly free with no real-money wagering (this is called
-  out repeatedly in the copy and FAQ for legal/compliance reasons — preserve that framing when editing
-  copy).
+  friends); the site explains the rules, collects the participant's Instagram handle (see above), and
+  links out via `#insta-post-link`. This is *not* a paid betting product — the games/vote are
+  explicitly free with no real-money wagering (this is called out repeatedly in the copy and FAQ for
+  legal/compliance reasons — preserve that framing when editing copy).
 - **Motion gating**: `motionOK()` in `main.js` checks both that GSAP loaded (CDN may be blocked) and
   `prefers-reduced-motion`. Any new animation should route through this check the same way existing
   animations do, and have a non-GSAP fallback path where reasonable.
 - Ad placeholders (`.ad-placeholder`) mark where AdSense/Monetag ad units get pasted in; there are
   three slots (top, mid, bottom) plus the Monetag scripts/service workers (`sw.js`, `sw3.js` at repo
-  root, referenced by zone ID) already wired into `<head>`.
+  root, referenced by zone ID) already wired into `<head>`. The vignette (full-screen overlay) and
+  "multitag" zones were deliberately removed — they were hijacking clicks badly enough that visitors
+  couldn't reliably use the Instagram registration form or the CTA button. Don't re-add an
+  intrusive/full-screen/click-hijacking ad format without the site owner explicitly signing off on
+  that trade-off again; a genuinely non-intrusive format (Native Banner/In-Page Push) is what's wanted
+  for the `.ad-placeholder` slots instead.
 
 ## Editing conventions specific to this repo
 

@@ -5,11 +5,11 @@ Landing page para la gran final de la Copa Mundial 2026 entre **España** y **Ar
 ## Qué incluye
 
 - ⏱️ **Cuenta regresiva** hasta la final (19 de julio de 2026, MetLife Stadium)
-- 🔮 **Predicción de marcador** (juego gratuito, sin apuestas de dinero)
+- 🔮 **Voto de quién gana** (España / Empate / Argentina), con el % de la afición (juego gratuito, sin apuestas de dinero)
 - 🥅 **Minijuego de penaltis** con rachas y récord personal
 - 🧠 **Trivia** sobre ambas selecciones
-- 🎁 **Sorteo en Instagram**: me gusta + compartir la publicación + registrar el usuario en la web
-- 💬 **Comentarios** de los visitantes
+- 🎁 **Sorteo en Instagram**: me gusta + comentar etiquetando a 2 amigos + registrar tu usuario de Instagram en la web
+- 💬 **Comentarios** de los visitantes, con filtro de palabras malsonantes
 - 📢 **3 espacios publicitarios** listos para Google AdSense o Monetag
 
 ## Tecnología
@@ -22,7 +22,7 @@ Frontend en HTML + CSS + JavaScript puro, **sin frameworks ni build**, con **GSA
 - Open Graph y Twitter Cards para que se comparta bien en redes
 - `sitemap.xml` y `robots.txt` incluidos
 
-Los **comentarios** y las **predicciones de marcador** (con el % de la afición que vota a cada equipo) ya no se guardan solo en el navegador: se comparten entre todos los visitantes mediante un backend en `server/app.py`, escrito solo con librería estándar de Python (`http.server` + `sqlite3`, sin `pip install`). El resto (racha de penaltis, mejor marca de trivia, bote estimado) sigue en `localStorage`, sin servidor.
+Los **comentarios**, el **voto de quién gana** (con el % de la afición) y el **registro de Instagram** de cada participante ya no se guardan solo en el navegador: se comparten entre todos los visitantes mediante un backend en `server/app.py`, escrito solo con librería estándar de Python (`http.server` + `sqlite3`, sin `pip install`). El resto (racha de penaltis, mejor marca de trivia, bote estimado) sigue en `localStorage`, sin servidor.
 
 ## Puesta en marcha
 
@@ -33,10 +33,9 @@ Los **comentarios** y las **predicciones de marcador** (con el % de la afición 
    - Descomenta la `<meta name="google-site-verification">` del `<head>` de `index.html` y pega tu código
    - Envía el `sitemap.xml` y usa "Inspección de URLs → Solicitar indexación" para la home
 4. **Publicidad (AdSense o Monetag)**: en el `<head>` de `index.html` hay un bloque comentado con las instrucciones de ambas redes. Pega tu script, coloca los bloques de anuncio en los tres `ad-placeholder` del HTML y completa `ads.txt` con tu ID de editor (imprescindible para cobrar).
-5. **Sorteo en Instagram** (la web solo informa; la participación es 100% en Instagram):
-   - Publica el post del sorteo en tu cuenta y reemplaza `TU_PUBLICACION` en el enlace `#insta-post-link` de `index.html`
-   - Requisitos de participación (ya explicados en la página): me gusta a la publicación + comentar etiquetando a 2 amigos; el comentario es la participación (seguir la cuenta es opcional)
-   - Antes del sorteo, comprueba en Instagram que cada comentario cumple los requisitos
+5. **Sorteo en Instagram** (la participación real ocurre en Instagram; la web solo informa y registra el usuario). El enlace `#insta-post-link` de `index.html` apunta al **perfil** de Instagram (`https://www.instagram.com/madolellr/`), no a una publicación fija, para no depender de un post ya existente — cada vez que publiques el sorteo será "la última publicación" sin tener que tocar el código:
+   - Requisitos de participación (ya explicados en la página, en este orden): visitar la web + inscribir su usuario de Instagram en la web + dar me gusta a la última publicación + comentar etiquetando a 2 amigos (seguir la cuenta es opcional)
+   - Antes del sorteo, cruza los usuarios registrados en la web (tabla `participants` de `server/data.db`) con quienes realmente cumplieron los requisitos en Instagram — el registro en la web es solo lo que el participante declara, no una verificación automática de que comentó de verdad. Para ver la lista: `sqlite3 server/data.db "SELECT instagram FROM participants;"`
 
 ## Aviso legal importante
 

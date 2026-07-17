@@ -1,0 +1,6 @@
+python3 -c "
+import sqlite3
+conn = sqlite3.connect('server/data.db')
+for row in conn.execute('SELECT id, client_id, instagram, created_at, updated_at FROM participants ORDER BY id'):
+    print(row)
+"
